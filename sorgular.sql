@@ -305,6 +305,12 @@ select count(*)
 from ships_1012_geom
 where ship_type='Passenger'
 
+-- Get Points in bbox
+SELECT mmsi,count(*)
+from ships_1012_geom
+where geom && ST_MakeEnvelope(10.69, 57.40 ,11.53, 57.85, 4326) and time_info>='2020-12-10 00:00:00' and time_info<='2020-12-10 00:15:00'
+group by mmsi
+
 -----------------------
 
 --0.001 => 111m
