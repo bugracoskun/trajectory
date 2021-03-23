@@ -8,6 +8,7 @@ Kütüphane ve fonksiyonlar burada yazılıyor.
 
 1) init --> postgres bağlantısı sağlanır.
 2) find_seaport --> Verilen gün ve saatte buffera göre geminin konumlarını bulur
+3) get_points_bbox --> verilen gün,zaman ve bboxta yer alan gemilerin mmsi değerleri döndürülür
 """
 
 import psycopg2
@@ -45,3 +46,16 @@ class postgres():
         cur.close()
         
         return result
+    
+# verilen gün ve bbox ta yer alan gemi sayısını bulur
+    def get_points_bbox(self,table_name,bbox_feat,time_start,time_finish):
+        # st_makeenvelope --> float xmin, float ymin, float xmax, float ymax
+        query =  "SELECT mmsi "\
+        "from {} "\
+        "where geom && ST_MakeEnvelope({}, {} ,{}, {}, 4326) and time_info>='{}' and time_info<='{}' "\
+        "group by mmsi ".format(table_name,bbox_feat[0],bbox_feat[1],bbox_feat[2],bbox_feat[3],time_start,time_finish)
+
+        cur = self.conn.cursor()
+        cur.execute(query)
+        trips=cur.fetchall()
+        return trips
