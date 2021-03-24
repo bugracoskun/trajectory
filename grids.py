@@ -2,9 +2,11 @@ from turf.square_grid import square_grid
 from turf.boolean_point_in_polygon import boolean_point_in_polygon
 from turf import point
 from turf.bbox import bbox
+from turf.center import center
 import json
 import psycopg2
 from datetime import datetime
+from geojson import Point, Feature, FeatureCollection, dump
 from trajectory import *
 
 # database connection
@@ -23,7 +25,8 @@ data='{\
        "bbox_area":[10.69, 57.40 ,11.53, 57.85],\
        "cell_side":5,\
        "unit":"kilometers",\
-       "table":"ships_1012_geom"\
+       "table":"ships_1012_geom",\
+       "table_spaceTimeCube":"space_time_cube_10_12_2020"\
       }'
 data = json.loads(data)
 
@@ -34,14 +37,31 @@ cellSide = data["cell_side"]
 options = "{units: "+data["unit"]+"}"
 
 squareGrid = square_grid(bbox_area, cellSide, options)
-
+features = []
+x=0
+y=0
 for i in range(len(squareGrid["features"])):
     bbox_feat=bbox(squareGrid["features"][i])
-    
+    center_feat=center(squareGrid["features"][i])
     # get points in bbox and date
     trips=p.get_points_bbox(data["table"],bbox_feat,'2020-12-10 00:00:00','2020-12-10 00:15:00')
-    print(trips)
 
+    # add to geojson
+    center_feat["properties"]["count"]=len(trips)
+    features.append(center_feat)
+    print(center_feat)
+    # add to database
+    if i%5==0 and i!=0:
+        x=x+1
+        y=0
+    else:
+        y=i%5
+    adddatabase=p.addSTCDatabase(data["table_spaceTimeCube"],'2020-12-10 00:00:00','2020-12-10 00:15:00',x,y,len(trips))
+
+
+feature_collection = FeatureCollection(features)
+with open('myfile.geojson', 'w') as f:
+   dump(feature_collection, f)
 
 # Yöntem 2
 '''

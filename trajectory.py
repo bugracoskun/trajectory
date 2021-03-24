@@ -59,3 +59,24 @@ class postgres():
         cur.execute(query)
         trips=cur.fetchall()
         return trips
+
+# get vessel on mmsi
+    def getVessel(self,table_name,mmsi):
+        query =  "SELECT * "\
+        "from {} "\
+        "where mmsi='{}' ".format(table_name,mmsi)
+
+        cur = self.conn.cursor()
+        cur.execute(query)
+        result=cur.fetchall()
+        return result
+
+# space time cube add to database
+    def addSTCDatabase(self,table_name,time_start,time_finish,x,y,counts):
+        query =  "INSERT INTO {}(time_start,time_finish,x,y,counts) "\
+        "VALUES ('{}','{}',{},{},{}) ".format(table_name,time_start,time_finish,x,y,counts)
+
+        cur = self.conn.cursor()
+        cur.execute(query)
+        self.conn.commit()
+        return True

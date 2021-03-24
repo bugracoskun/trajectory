@@ -311,6 +311,20 @@ from ships_1012_geom
 where geom && ST_MakeEnvelope(10.69, 57.40 ,11.53, 57.85, 4326) and time_info>='2020-12-10 00:00:00' and time_info<='2020-12-10 00:15:00'
 group by mmsi
 
+-- space time cube
+CREATE TABLE space_time_cube_10_12_2020 (
+  "id" SERIAL,
+  time_start timestamp,
+  time_finish timestamp,
+  x int,
+  y int,
+  counts int,
+  PRIMARY KEY ("id")
+)
+
+INSERT INTO space_time_cube_10_12_2020(time_start,time_finish,x,y,counts)
+VALUES ('2020-04-14 00:00:00','2020-04-14 00:15:00',3,5,5);
+
 -----------------------
 
 --0.001 => 111m
