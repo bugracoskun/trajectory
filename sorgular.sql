@@ -305,6 +305,11 @@ select count(*)
 from ships_1012_geom
 where ship_type='Passenger'
 
+select mmsi
+from ships_1012_geom
+where time_info>='2020-12-10 00:15:00' and time_info<='2020-12-10 00:30:00'
+group by mmsi
+
 -- Get Points in bbox
 SELECT mmsi,count(*)
 from ships_1012_geom

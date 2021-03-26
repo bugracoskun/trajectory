@@ -80,3 +80,7 @@ class postgres():
         cur.execute(query)
         self.conn.commit()
         return True
+
+# change char in string
+    def replace(self,s, position, character):
+        return s[:position] + character + s[position+1:]

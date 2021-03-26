@@ -1,3 +1,6 @@
+from trajectory import *
+from datetime import datetime
+from datetime import timedelta
 from turf.square_grid import square_grid
 from turf.boolean_point_in_polygon import boolean_point_in_polygon
 from turf import point
@@ -5,9 +8,7 @@ from turf.bbox import bbox
 from turf.center import center
 import json
 import psycopg2
-from datetime import datetime
 from geojson import Point, Feature, FeatureCollection, dump
-from trajectory import *
 
 # database connection
 f = open("database.txt", "r")
@@ -26,42 +27,68 @@ data='{\
        "cell_side":5,\
        "unit":"kilometers",\
        "table":"ships_1012_geom",\
-       "table_spaceTimeCube":"space_time_cube_10_12_2020"\
+       "table_spaceTimeCube":"space_time_cube_10_12_2020",\
+       "year":2020,\
+       "month":12,\
+       "day":10,\
+       "time":15\
       }'
 data = json.loads(data)
 
+#date
+
+timee = datetime(data["year"], data["month"], data["day"], 00, 00, 00, 00)
+start_time=timee.strftime('%Y-%m-%d %H:%M:%S')
+time_range=1440/data["time"]
+
+
+add_time =timedelta(minutes=data["time"])
+timee2 = timee+add_time
+finish_time=timee2.strftime('%Y-%m-%d %H:%M:%S')
 
 #define grids
 bbox_area = data["bbox_area"]
 cellSide = data["cell_side"]
 options = "{units: "+data["unit"]+"}"
-
 squareGrid = square_grid(bbox_area, cellSide, options)
-features = []
-x=0
-y=0
-for i in range(len(squareGrid["features"])):
-    bbox_feat=bbox(squareGrid["features"][i])
-    center_feat=center(squareGrid["features"][i])
-    # get points in bbox and date
-    trips=p.get_points_bbox(data["table"],bbox_feat,'2020-12-10 00:00:00','2020-12-10 00:15:00')
 
-    # add to geojson
-    center_feat["properties"]["count"]=len(trips)
-    features.append(center_feat)
-    print(center_feat)
-    # add to database
-    if i%5==0 and i!=0:
-        x=x+1
-        y=0
-    else:
-        y=i%5
-    adddatabase=p.addSTCDatabase(data["table_spaceTimeCube"],'2020-12-10 00:00:00','2020-12-10 00:15:00',x,y,len(trips))
+for j in range(int(time_range)):
+    features = []
+    x=1
+    y=1
+    if j!=0:
+        new_time=timee+add_time
+        timee=new_time
+        start_time=new_time.strftime('%Y-%m-%d %H:%M:%S')
 
-
-feature_collection = FeatureCollection(features)
-with open('myfile.geojson', 'w') as f:
-   dump(feature_collection, f)
+        new_finish_time=new_time+add_time
+        finish_time=new_finish_time.strftime('%Y-%m-%d %H:%M:%S')
+    print(start_time)
+    print(finish_time)
+    for i in range(len(squareGrid["features"])):
+        bbox_feat=bbox(squareGrid["features"][i])
+        center_feat=center(squareGrid["features"][i])
+        # get points in bbox and date
+        trips=p.get_points_bbox(data["table"],bbox_feat,start_time,finish_time)
+        # add to geojson
+        center_feat["properties"]["count"]=len(trips)
+        features.append(center_feat)
+        print(center_feat)
+        # add to database
+        if i%10==0 and i!=0:
+            x=x+1
+            y=1
+        else:
+            y=i%10+1
+        adddatabase=p.addSTCDatabase(data["table_spaceTimeCube"],start_time,finish_time,x,y,len(trips))
+    feature_collection = FeatureCollection(features)
+    
+    x=start_time.split()
+    geojson_name=x[1]
+    geojson_name=p.replace(geojson_name, 2, '_')
+    geojson_name=p.replace(geojson_name, 5, '_')
+    with open(geojson_name+'.geojson', 'w') as f:
+        dump(feature_collection, f)
 
 # Yöntem 2
 '''
