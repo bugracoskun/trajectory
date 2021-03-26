@@ -330,6 +330,13 @@ CREATE TABLE space_time_cube_10_12_2020 (
 INSERT INTO space_time_cube_10_12_2020(time_start,time_finish,x,y,counts)
 VALUES ('2020-04-14 00:00:00','2020-04-14 00:15:00',3,5,5);
 
+---- SPACE TIME CUBE
+
+-- 5  den büyük değerler
+select *
+from space_time_cube_10_12_2020
+where counts>5
+
 -----------------------
 
 --0.001 => 111m
