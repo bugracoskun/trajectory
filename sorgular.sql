@@ -196,7 +196,7 @@ order by time_info
 --15.04
 SELECT *
 FROM ships_1012_geom s
-WHERE s.mmsi = 219000431           
+WHERE s.mmsi = 311000929                     
 order by time_info
 
 SELECT count(*)
