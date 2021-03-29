@@ -196,7 +196,7 @@ order by time_info
 --15.04
 SELECT *
 FROM ships_1012_geom s
-WHERE s.mmsi = 211245200
+WHERE s.mmsi = 219000431           
 order by time_info
 
 SELECT count(*)
@@ -233,7 +233,7 @@ WHERE s.id = 1
 SELECT *
 FROM ships_1012_geom s
 FULL JOIN zones z1 ON ST_Dwithin(z1.geom, s.geom,0.003)
-WHERE s.mmsi = 219026301 and z1.geom!='' and sog<0.4
+WHERE s.mmsi = 211445190 and z1.geom!='' and sog<0.4
 order by time_info
 
 SELECT *
@@ -311,9 +311,9 @@ where time_info>='2020-12-10 00:15:00' and time_info<='2020-12-10 00:30:00'
 group by mmsi
 
 -- Get Points in bbox
-SELECT mmsi,count(*)
+SELECT mmsi
 from ships_1012_geom
-where geom && ST_MakeEnvelope(10.69, 57.40 ,11.53, 57.85, 4326) and time_info>='2020-12-10 00:00:00' and time_info<='2020-12-10 00:15:00'
+where geom && ST_MakeEnvelope(10.69, 57.40 ,11.53, 57.85, 4326) and ship_type='Passanger' and time_info>='2020-12-10 00:00:00' and time_info<='2020-12-10 00:15:00'
 group by mmsi
 
 -- space time cube

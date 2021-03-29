@@ -5,6 +5,9 @@ from datetime import timedelta
 
 datee='2020-12-10 00:00:00'
 b = datetime(2020, 12, 10, 00, 00, 00, 00)
+d = datetime(2020, 12, 10, 00, 15, 00, 00)
+
+print(d-b>timedelta(minutes=14))
 
 c=b.strftime('%m-%d-%Y %H:%M:%S')
 
@@ -16,7 +19,6 @@ y=x[1]
 
 y=replace(y, 2, '_')
 y=replace(y, 5, '_')
-print(y)
 """
 f = open("database.txt", "r")
 database=f.readline().rstrip("\n")
