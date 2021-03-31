@@ -31,7 +31,7 @@ CREATE TABLE ships (
   PRIMARY KEY ("id")
 )
 -- optimal table
-CREATE TABLE ships_opt_10_12 (
+CREATE TABLE ships_opt_17_12 (
   "id" SERIAL,
   time_info timestamp,
   Type_of_mobile character varying(50),
@@ -62,7 +62,7 @@ CREATE TABLE ships_opt_10_12 (
   PRIMARY KEY ("id")
 )
 -- geom table
-CREATE TABLE ships_1012_geom (
+CREATE TABLE ships_1712_geom (
   "id" SERIAL,
   time_info timestamp,
   Type_of_mobile character varying(50),
@@ -94,7 +94,11 @@ CREATE TABLE ships_1012_geom (
   PRIMARY KEY ("id")
 )
 
-insert into ships_1012_geom(id, time_info, Type_of_mobile, MMSI, lat, 
+select *
+from ships_opt_17_12
+limit 5
+
+insert into ships_1712_geom(id, time_info, Type_of_mobile, MMSI, lat, 
 		        lon, nav_status, ROT, SOG, COG, 
 		        heading, IMO, callsign, name_vessel, ship_type, cargo_type, 
 		        width, len, position_fixed_device, draught, 
@@ -105,8 +109,12 @@ insert into ships_1012_geom(id, time_info, Type_of_mobile, MMSI, lat,
 		        width, len, position_fixed_device, draught, 
 		        destination, eta, data_source_type, size_a, size_b, size_c, size_d,
 				ST_SetSRID(ST_Point(lon,lat),4326)
-	from ships_opt_10_12
-	
+	from ships_opt_17_12
+
+select *
+from ships_1712_geom
+limit 10
+
 select *
 from ships_1404_geom
 where ship_type='Passenger'
@@ -238,7 +246,7 @@ order by time_info
 
 SELECT *
 FROM ships_1012_geom s
-WHERE s.mmsi = 219000407   
+WHERE s.mmsi = 219005068    
 order by time_info
 
 --Point Buffer
@@ -313,11 +321,11 @@ group by mmsi
 -- Get Points in bbox
 SELECT mmsi
 from ships_1012_geom
-where geom && ST_MakeEnvelope(10.69, 57.40 ,11.53, 57.85, 4326) and ship_type='Passanger' and time_info>='2020-12-10 00:00:00' and time_info<='2020-12-10 00:15:00'
+where geom && ST_MakeEnvelope(11.10499, 55.14280 ,11.26270, 55.23284, 4326) and time_info>='2020-12-10 00:00:00' and time_info<='2020-12-10 24:00:00'
 group by mmsi
 
 -- space time cube
-CREATE TABLE space_time_cube_10_12_2020 (
+CREATE TABLE space_time_cube_10_12_2020_219005068 (
   "id" SERIAL,
   time_start timestamp,
   time_finish timestamp,

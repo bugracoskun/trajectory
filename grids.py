@@ -22,12 +22,13 @@ p = postgres(database, user,password,host,port)
 cur = p.conn.cursor()
 
 # Usage Data
+# "bbox_area":[10.69, 57.40 ,11.53, 57.85],\
 data='{\
-       "bbox_area":[10.69, 57.40 ,11.53, 57.85],\
-       "cell_side":5,\
+       "bbox_area":[11.10499, 55.14280 ,11.26270, 55.23284],\
+       "cell_side":2,\
        "unit":"kilometers",\
        "table":"ships_1012_geom",\
-       "table_spaceTimeCube":"space_time_cube_10_12_2020",\
+       "table_spaceTimeCube":"space_time_cube_10_12_2020_219005068",\
        "year":2020,\
        "month":12,\
        "day":10,\
@@ -51,6 +52,11 @@ bbox_area = data["bbox_area"]
 cellSide = data["cell_side"]
 options = "{units: "+data["unit"]+"}"
 squareGrid = square_grid(bbox_area, cellSide, options)
+
+'''
+with open('gridss.geojson', 'w') as f:
+        dump(squareGrid, f)
+'''
 
 for j in range(int(time_range)):
     features = []

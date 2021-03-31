@@ -84,3 +84,25 @@ class postgres():
 # change char in string
     def replace(self,s, position, character):
         return s[:position] + character + s[position+1:]
+
+# update column
+    def updateColumn(self,table_name,value,id):
+        query='UPDATE {} ' \
+              'SET x = {} ' \
+              'WHERE id= {}'.format(table_name,value,id)
+
+        cur = self.conn.cursor()
+        cur.execute(query)
+        self.conn.commit()
+        return True
+
+# get table
+    def gettable(self,table_name):
+        query='select * ' \
+              'from {}' \
+              ' order by id'.format(table_name)
+
+        cur = self.conn.cursor()
+        cur.execute(query)
+        result=cur.fetchall()
+        return result
