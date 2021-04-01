@@ -321,7 +321,7 @@ group by mmsi
 -- Get Points in bbox
 SELECT mmsi
 from ships_1012_geom
-where geom && ST_MakeEnvelope(11.10499, 55.14280 ,11.26270, 55.23284, 4326) and time_info>='2020-12-10 00:00:00' and time_info<='2020-12-10 24:00:00'
+where geom && ST_MakeEnvelope(11.10499, 55.14280 ,11.26270, 55.23284, 4326) and time_info>='2020-12-10 00:00:00' and time_info<='2020-12-10 00:15:00'
 group by mmsi
 
 -- space time cube
@@ -332,6 +332,7 @@ CREATE TABLE space_time_cube_10_12_2020_219005068 (
   x int,
   y int,
   counts int,
+  feature text,
   PRIMARY KEY ("id")
 )
 

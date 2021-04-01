@@ -32,7 +32,8 @@ data='{\
        "year":2020,\
        "month":12,\
        "day":10,\
-       "time":15\
+       "time":15,\
+       "i":5\
       }'
 data = json.loads(data)
 
@@ -81,20 +82,21 @@ for j in range(int(time_range)):
         features.append(center_feat)
         print(center_feat)
         # add to database
-        if i%10==0 and i!=0:
+        if i%data["i"]==0 and i!=0:
             x=x+1
             y=1
         else:
-            y=i%10+1
-        adddatabase=p.addSTCDatabase(data["table_spaceTimeCube"],start_time,finish_time,x,y,len(trips))
+            y=i%data["i"]+1
+        obj = json.dumps(squareGrid["features"][i])
+        adddatabase=p.addSTCDatabase(data["table_spaceTimeCube"],start_time,finish_time,x,y,len(trips),obj)
     feature_collection = FeatureCollection(features)
     
     x=start_time.split()
     geojson_name=x[1]
     geojson_name=p.replace(geojson_name, 2, '_')
     geojson_name=p.replace(geojson_name, 5, '_')
-    with open(geojson_name+'.geojson', 'w') as f:
-        dump(feature_collection, f)
+    #with open(geojson_name+'.geojson', 'w') as f:
+    #    dump(feature_collection, f)
 
 # Yöntem 2
 '''
