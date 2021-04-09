@@ -1,4 +1,4 @@
-create extension postgis; 
+﻿create extension postgis; 
 -- text 
 CREATE TABLE ships (
   "id" SERIAL,
@@ -31,7 +31,7 @@ CREATE TABLE ships (
   PRIMARY KEY ("id")
 )
 -- optimal table
-CREATE TABLE ships_opt_17_12 (
+CREATE TABLE ships_opt (
   "id" SERIAL,
   time_info timestamp,
   Type_of_mobile character varying(50),
@@ -62,7 +62,7 @@ CREATE TABLE ships_opt_17_12 (
   PRIMARY KEY ("id")
 )
 -- geom table
-CREATE TABLE ships_1712_geom (
+CREATE TABLE ships (
   "id" SERIAL,
   time_info timestamp,
   Type_of_mobile character varying(50),
