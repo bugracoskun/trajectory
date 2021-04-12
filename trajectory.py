@@ -273,3 +273,14 @@ class postgres():
         result=cur.fetchall()
         return result
 
+# get vessel time difference
+    def getVesselTimeDiff(self,table_name,mmsi,start_time,end_time):
+        query =  "SELECT time_info "\
+        "from {} "\
+        "where mmsi='{}' and time_info>='{}' and time_info<='{}' "\
+        "order by time_info asc ".format(table_name,mmsi,start_time,end_time)
+
+        cur = self.conn.cursor()
+        cur.execute(query)
+        result=cur.fetchall()
+        return result
