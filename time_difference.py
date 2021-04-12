@@ -43,10 +43,6 @@ for time in times:
             diff.append(td.total_seconds())
         before_time=time[0]
 
-print(max(diff))
-print(min(diff))
-print(diff)
-
 # Data for plotting
 t = diff
 s = range(0, len(diff))
