@@ -39,57 +39,68 @@ for x in f2:
         datee=line[2]
         datee=datee.split("-")
         start_time=line[3].split(":")
+        start_time2=line[2]+" "+line[3]
+        general_start_time_obj=datetime(int(datee[0]),int(datee[1]),int(datee[2]),int(start_time[0]),int(start_time[1]),int(start_time[2]))
+
         finish_time=line[5].split(":")
+        finish_time2=line[4]+" "+line[5]
         finish_epoch=datetime(int(datee[0]),int(datee[1]),int(datee[2]),int(finish_time[0]),int(finish_time[1]),int(finish_time[2]))
         epoch1=datetime(int(datee[0]),int(datee[1]),int(datee[2]),int(start_time[0]),int(start_time[1]),int(start_time[2]))
         epoch2=epoch1+time_range
         while True:
+            print("--------------------")
             print(epoch1)
             print(epoch2)
             # get points 
             points=p.getVesselSpecificTime(table_name,mmsi,epoch1,epoch2)
             
+            #center
+            center_point=center(points)
+            
+            # transform (if is needed)
             ##transform_coords=p.transformCoords('epsg:4326','epsg:2163',points)
+
+            # cluster
             cluster_result=p.clusterPoints(points,0.5,8)
             print(cluster_result)
+
+            epoch_start=datetime(int(datee[0]),int(datee[1]),int(datee[2]),int(start_time[0]),int(start_time[1]),int(start_time[2])).timestamp()
+            epoch_finish=datetime(int(datee[0]),int(datee[1]),int(datee[2]),int(finish_time[0]),int(finish_time[1]),int(finish_time[2])).timestamp()
+            epoch_res=math.ceil((epoch_start+epoch_finish)/2)
+
+            local_start_time=epoch1.strftime('%Y-%m-%d %H:%M:%S')
+            
+            time_data=p.getVesselTimeDiff(table_name,default_mmsi,epoch1,epoch2)
+            if(len(time_data)>0):
+                if(epoch2>finish_epoch):
+                    local_finish_time=finish_epoch.strftime('%Y-%m-%d %H:%M:%S')
+                    local_finish_time_obj=finish_epoch
+                    local_time_trip=round((local_finish_time_obj-epoch1).total_seconds()/60,2)
+                else:
+                    local_finish_time=time_data[-1][0].strftime('%Y-%m-%d %H:%M:%S')
+                    local_finish_time_obj=time_data[-1][0]
+                    local_time_trip=round((local_finish_time_obj-epoch1).total_seconds()/60,2)
+
+            data.append(dict({"epoch":epoch_res,"general_start_time":start_time2,"general_start_time_obj":general_start_time_obj,"local_start_time":local_start_time,"local_start_time_obj":epoch1,"general_finish_time_obj":finish_epoch,"general_finish_time":finish_time2,"local_finish_time_obj":local_finish_time_obj,"local_finish_time":local_finish_time,"total_trip_time":line[6],"local_time_trip":local_time_trip,"center":center_point}))
 
             epoch1=epoch2
             epoch2=epoch1+time_range
             if(epoch1>finish_epoch):
                 break
         break
-        '''
-        datee=line[2]
-        start_time=line[3]
-        start_time2=line[2]+" "+line[3]
-        finish_time=line[5]
-        finish_time2=line[4]+" "+line[5]
-        datee=datee.split("-")
-        start_time=start_time.split(":")
-        finish_time=finish_time.split(":")
-        epoch1=datetime(int(datee[0]),int(datee[1]),int(datee[2]),int(start_time[0]),int(start_time[1]),int(start_time[2])).timestamp()
-        epoch2=datetime(int(datee[0]),int(datee[1]),int(datee[2]),int(finish_time[0]),int(finish_time[1]),int(finish_time[2])).timestamp()
-        epoch=math.ceil((epoch1+epoch2)/2)
-        
-        date1=datetime(int(datee[0]),int(datee[1]),int(datee[2]),int(start_time[0]),int(start_time[1]),int(start_time[2]))
-        date2=datetime(int(datee[0]),int(datee[1]),int(datee[2]),int(finish_time[0]),int(finish_time[1]),int(finish_time[2]))
-        data.append(dict({"epoch":epoch,"start_time":start_time2,"start_time_obj":date1,"finish_time_obj":date2,"finish_time":finish_time2,"trip_time":line[6]}))
-        '''
 
-'''
+print(data)
+
 all_date1=start_datee.strftime('%Y-%m-%d %H:%M:%S')
-allPoints=p.getVesselAllLoc(table_name,default_mmsi)
-center_point=center(allPoints)
-print(len(data))
 
+#allPoints=p.getVesselAllLoc(table_name,default_mmsi)
+
+# get space time cube data
 space_time_cube=p.gettable(space_time_cube_t)
 polygons=[]
 for k in space_time_cube:
     add_object = json.loads(k[6])
     polygons.append(add_object)
-
-print(data)
-'''
 
 '''
 with open('my_file.csv', mode='w') as csv_file:
