@@ -2,6 +2,7 @@ from trajectory import *
 from datetime import time
 from datetime import datetime
 from datetime import timedelta
+from pyproj import Proj, transform
 
 
 
@@ -15,19 +16,5 @@ p = postgres(database, user,password,host,port)
 
 
 
-result=p.gettable('space_time_cube_10_12_2020_219005068')
-print(len(result))
-print(result[0])
-
-new_val=1
-
-for i in range(len(result)):
-    if i%5==0 and i!=0:
-        new_val=new_val+1
-        if new_val==6:
-            new_val=1
-        p.updateColumn('space_time_cube_10_12_2020_219005068',new_val,result[i][0])
-    else:
-        p.updateColumn('space_time_cube_10_12_2020_219005068',new_val,result[i][0])
-#p.updateColumn('space_time_cube_10_12_2020_219005068',1)
-
+res=p.transformCoords('epsg:3857','epsg:4326',[-11705274.6374,4826473.6922])
+print(res)

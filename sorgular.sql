@@ -1,4 +1,4 @@
-﻿create extension postgis; 
+create extension postgis; 
 -- text 
 CREATE TABLE ships (
   "id" SERIAL,
@@ -246,7 +246,12 @@ order by time_info
 
 SELECT *
 FROM ships_1012_geom s
-WHERE s.mmsi = 219005068    
+WHERE s.mmsi = 219005068 and time_info>='2020-12-10 03:55:15' and time_info<='2020-12-10 04:05:15'
+order by time_info
+
+SELECT *
+FROM ships_1012_geom s
+WHERE s.mmsi = 219005068
 order by time_info
 
 --Point Buffer

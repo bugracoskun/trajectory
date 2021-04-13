@@ -26,6 +26,7 @@ start_datee=datetime(2020,12,10, 00, 00, 00, 00)
 start_epoch=math.ceil(datetime(2020,12,10, 00, 00, 00, 00).timestamp())
 add_time = timedelta(minutes=15)
 border=5
+time_range=timedelta(minutes=10)
 
 # ------ Analyse -------------------
 
@@ -35,6 +36,29 @@ for x in f2:
     line=x.split()
     mmsi=line[0]
     if mmsi==str(default_mmsi):
+        datee=line[2]
+        datee=datee.split("-")
+        start_time=line[3].split(":")
+        finish_time=line[5].split(":")
+        finish_epoch=datetime(int(datee[0]),int(datee[1]),int(datee[2]),int(finish_time[0]),int(finish_time[1]),int(finish_time[2]))
+        epoch1=datetime(int(datee[0]),int(datee[1]),int(datee[2]),int(start_time[0]),int(start_time[1]),int(start_time[2]))
+        epoch2=epoch1+time_range
+        while True:
+            print(epoch1)
+            print(epoch2)
+            # get points 
+            points=p.getVesselSpecificTime(table_name,mmsi,epoch1,epoch2)
+            
+            ##transform_coords=p.transformCoords('epsg:4326','epsg:2163',points)
+            cluster_result=p.clusterPoints(points,0.5,8)
+            print(cluster_result)
+
+            epoch1=epoch2
+            epoch2=epoch1+time_range
+            if(epoch1>finish_epoch):
+                break
+        break
+        '''
         datee=line[2]
         start_time=line[3]
         start_time2=line[2]+" "+line[3]
@@ -50,8 +74,9 @@ for x in f2:
         date1=datetime(int(datee[0]),int(datee[1]),int(datee[2]),int(start_time[0]),int(start_time[1]),int(start_time[2]))
         date2=datetime(int(datee[0]),int(datee[1]),int(datee[2]),int(finish_time[0]),int(finish_time[1]),int(finish_time[2]))
         data.append(dict({"epoch":epoch,"start_time":start_time2,"start_time_obj":date1,"finish_time_obj":date2,"finish_time":finish_time2,"trip_time":line[6]}))
+        '''
 
-
+'''
 all_date1=start_datee.strftime('%Y-%m-%d %H:%M:%S')
 allPoints=p.getVesselAllLoc(table_name,default_mmsi)
 center_point=center(allPoints)
@@ -64,6 +89,8 @@ for k in space_time_cube:
     polygons.append(add_object)
 
 print(data)
+'''
+
 '''
 with open('my_file.csv', mode='w') as csv_file:
     fieldnames = ['tempature', 'pressure', 'humidity','cloud','wind_spped','traffic','trip_time']

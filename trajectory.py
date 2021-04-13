@@ -16,6 +16,8 @@ import datetime
 from turf.square_grid import square_grid
 from turf.boolean_point_in_polygon import boolean_point_in_polygon
 from turf.bbox import bbox
+from sklearn.cluster import DBSCAN
+from pyproj import Proj, transform
 #import os
 
 class postgres():
@@ -284,3 +286,18 @@ class postgres():
         cur.execute(query)
         result=cur.fetchall()
         return result
+
+# cluster Points with dbscan
+    def clusterPoints(self,points,epsilon,min_samples):
+        clustering = DBSCAN(eps=epsilon, min_samples=min_samples).fit(points)
+        return clustering.labels_
+
+# transform Coordinates
+    def transformCoords(self,proj1,proj2,coords):
+        transform_coords=[]
+        for i in range(len(coords)):
+            inProj = Proj(proj1)
+            outProj = Proj(proj2)
+            x2,y2 = transform(inProj,outProj,coords[i][0],coords[i][1])
+            transform_coords.append([x2,y2])
+        return transform_coords
