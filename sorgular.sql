@@ -124,6 +124,18 @@ select DISTINCT mmsi
 from ships_1012_geom
 where ship_type='Passenger' and mmsi=211445190
 
+-- DOSYA YÜKLEME
+select count(*)
+from ships_opt
+where time_info>='2020-12-28 00:00:00' and time_info<='2020-12-28 24:00:00'
+
+DELETE FROM ships_opt
+WHERE time_info>='2020-12-28 00:00:00' and time_info<='2020-12-28 24:00:00'
+
+copy public.ships_opt (time_info, type_of_mobile, mmsi, lat, lon, nav_status, rot, sog, cog, heading, imo, callsign, name_vessel, ship_type, cargo_type, width, len, position_fixed_device, draught, destination, eta, data_source_type, size_a, size_b, size_c, size_d) 
+FROM 'D:/trajectory/aisdk_20201231.csv' 
+CSV HEADER QUOTE '"' ESCAPE '''';
+
 --???????
 select *
 from ships
