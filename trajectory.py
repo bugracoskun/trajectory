@@ -32,6 +32,17 @@ class postgres():
         except:
             print("Postgres connection failed!")
 
+# dosyaları tabloya kopyalama
+    def copy_files(self,file_name):
+        cur = self.conn.cursor()
+        query = "copy public.ships_opt (time_info, type_of_mobile, mmsi, lat, lon, nav_status, rot, sog, cog, heading, imo, callsign, name_vessel, ship_type, cargo_type, width, len, position_fixed_device, draught, destination, eta, data_source_type, size_a, size_b, size_c, size_d) "\
+                "FROM 'D:/trajectory/aisdk_{}.csv' "\
+                "CSV HEADER QUOTE '\"' ESCAPE ''''".format(file_name)
+
+        cur.execute(query)
+        self.conn.commit()
+        return True
+
 # Verilen gün ve saatte buffera göre geminin konumlarını bulur
     def find_seaport(self,day,mmsi,sog,buffer):
         cur = self.conn.cursor()

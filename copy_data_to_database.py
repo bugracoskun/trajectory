@@ -2,7 +2,7 @@ from trajectory import *
 from datetime import time
 from datetime import datetime
 from datetime import timedelta
-from pyproj import Proj, transform
+#from pyproj import Proj, transform
 
 
 
@@ -14,7 +14,15 @@ host=f.readline().rstrip("\n")
 port=f.readline().rstrip("\n")
 p = postgres(database, user,password,host,port)
 
+def copyfiles(i):
+  file_name=20201201
+  file_name=file_name+i
+  print(file_name)
+  res=p.copy_files(str(file_name))
+  if res==True:
+      if(i!=30):
+        i=i+1
+        copyfiles(i)
 
-
-res=p.transformCoords('epsg:3857','epsg:4326',[-11705274.6374,4826473.6922])
-print(res)
+copyfiles(0)
+    
