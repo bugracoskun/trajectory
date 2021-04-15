@@ -98,7 +98,7 @@ select *
 from ships_opt_17_12
 limit 5
 
-insert into ships_1712_geom(id, time_info, Type_of_mobile, MMSI, lat, 
+insert into ships(id, time_info, Type_of_mobile, MMSI, lat, 
 		        lon, nav_status, ROT, SOG, COG, 
 		        heading, IMO, callsign, name_vessel, ship_type, cargo_type, 
 		        width, len, position_fixed_device, draught, 
@@ -109,7 +109,7 @@ insert into ships_1712_geom(id, time_info, Type_of_mobile, MMSI, lat,
 		        width, len, position_fixed_device, draught, 
 		        destination, eta, data_source_type, size_a, size_b, size_c, size_d,
 				ST_SetSRID(ST_Point(lon,lat),4326)
-	from ships_opt_17_12
+	from ships_opt
 
 select *
 from ships_1712_geom
