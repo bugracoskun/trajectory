@@ -95,8 +95,18 @@ CREATE TABLE ships (
 )
 
 select *
-from ships_opt_17_12
-limit 5
+from ships
+limit 1000
+
+ALTER TABLE ships_opt
+ADD COLUMN geom geometry(Geometry,4326);
+
+UPDATE ships_opt f
+SET geom = (select ST_SetSRID(ST_Point(f.lon,f.lat),4326) from ships_opt b where f.id=b.id )
+
+   
+INSERT INTO ships_opt(geom)
+VALUES (select ST_SetSRID(ST_Point(lon,lat),4326) from ships_opt);
 
 insert into ships(id, time_info, Type_of_mobile, MMSI, lat, 
 		        lon, nav_status, ROT, SOG, COG, 
@@ -110,6 +120,7 @@ insert into ships(id, time_info, Type_of_mobile, MMSI, lat,
 		        destination, eta, data_source_type, size_a, size_b, size_c, size_d,
 				ST_SetSRID(ST_Point(lon,lat),4326)
 	from ships_opt
+	where mmsi=219005068
 
 select *
 from ships_1712_geom
