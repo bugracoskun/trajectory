@@ -33,21 +33,22 @@ except:
 cur = conn.cursor()
 
 query2 =  """select DISTINCT mmsi,lat,lon,time_info
-from ships_opt_10_12
+from ships
 where ship_type='Passenger' and mmsi=219005068
 order by mmsi,time_info
 """
 
-cur.execute(query2)
+#cur.execute(query2)
 
-passengers=cur.fetchall()
-passenger_list=[]
+#passengers=cur.fetchall()
+passenger_list=[219005068]
 before_pos=[0,0]
 before_vessel=""
 before_time=""
 distance_threshold=20
 time_threshold =timedelta(minutes=10)
 #unwanted_vessels=[]
+'''
 for passanger in passengers:
     mmsi=passanger[0]
     latitude=passanger[1]
@@ -107,7 +108,7 @@ for passanger in passengers:
             before_time=b
             passenger_list.append(mmsi)
     #passenger_list.append(passanger[0])
-    
+'''    
 
 # Simple solution - Loop------------
 
@@ -115,7 +116,7 @@ file = open("trajectory_ships_20min_219005068_local.txt", "w")
 for ship in passenger_list:
     sog_value=0.5
     query = " select mmsi,time_info,sog " \
-            " from ships_1012_geom s"\
+            " from ships s"\
             " FULL JOIN zones z1 ON ST_Dwithin(z1.geom, s.geom,0.003) "\
             " where mmsi={} and sog<{} "\
             " order by time_info asc ".format(ship,sog_value)
