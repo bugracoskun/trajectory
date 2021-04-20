@@ -355,7 +355,7 @@ where geom && ST_MakeEnvelope(11.10499, 55.14280 ,11.26270, 55.23284, 4326) and 
 group by mmsi
 
 -- space time cube
-CREATE TABLE space_time_cube_10_12_2020_219005068 (
+CREATE TABLE space_time_cube_219005068 (
   "id" SERIAL,
   time_start timestamp,
   time_finish timestamp,

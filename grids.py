@@ -28,7 +28,7 @@ data='{\
        "cell_side":2,\
        "unit":"kilometers",\
        "table":"ships_opt",\
-       "table_spaceTimeCube":"space_time_cube_10_12_2020_219005068",\
+       "table_spaceTimeCube":"space_time_cube_219005068",\
        "year":2020,\
        "month":12,\
        "day":1,\
@@ -95,8 +95,8 @@ for newday in range(31):
         geojson_name=x[1]
         geojson_name=p.replace(geojson_name, 2, '_')
         geojson_name=p.replace(geojson_name, 5, '_')
-        with open(geojson_name+'.geojson', 'w') as f:
-            dump(feature_collection, f)
+        #with open(geojson_name+'.geojson', 'w') as f:
+        #    dump(feature_collection, f)
 
 # Yöntem 2
 '''
