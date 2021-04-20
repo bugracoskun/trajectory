@@ -95,14 +95,16 @@ CREATE TABLE ships (
 )
 
 select *
-from ships
-limit 1000
+from ships_opt
+limit 10
 
 ALTER TABLE ships_opt
 ADD COLUMN geom geometry(Geometry,4326);
 
-UPDATE ships_opt f
-SET geom = (select ST_SetSRID(ST_Point(f.lon,f.lat),4326) from ships_opt b where f.id=b.id )
+UPDATE ships_opt b
+SET geom = ST_SetSRID(ST_Point(d.lon,d.lat),4326)
+from ships_opt d
+where d.id=b.id
 
    
 INSERT INTO ships_opt(geom)

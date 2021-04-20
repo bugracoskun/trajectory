@@ -312,3 +312,25 @@ class postgres():
             x2,y2 = transform(inProj,outProj,coords[i][0],coords[i][1])
             transform_coords.append([x2,y2])
         return transform_coords
+
+# get table for update
+    def gettableToUpdate(self,table_name,id):
+        query='select id,lat,lon ' \
+              'from {} ' \
+              'where id={}'.format(table_name,id)
+
+        cur = self.conn.cursor()
+        cur.execute(query)
+        result=cur.fetchall()
+        return result
+
+# upfate geom
+    def updateGeom(self,table_name,lon,lat,id):
+        query='update {} ' \
+              'set geom=ST_SetSRID(ST_Point({},{}),4326) ' \
+              'where id={} '.format(table_name,lon,lat,id)
+
+        cur = self.conn.cursor()
+        cur.execute(query)
+        self.conn.commit()
+        return True
