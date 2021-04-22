@@ -29,7 +29,7 @@ border=5
 time_range=timedelta(minutes=10)
 
 # ------ Analyse -------------------
-analyse_points={"info":[]} # points will be saved
+analyse_points={} # points will be saved
 
 f2 = open("trajectory_ships_20min_219005068_local.txt", "r")
 data=[]
@@ -57,7 +57,12 @@ for x in f2:
             # get points 
             points=p.getVesselSpecificTime(table_name,mmsi,epoch1,epoch2)
             points_info=p.getVesselSpecificTimewithTimeInfo(table_name,mmsi,epoch1,epoch2)
-            analyse_points["info"]=analyse_points["info"]+points_info
+            
+            if("info"+str(count+1) in analyse_points):
+                analyse_points["info"+str(count+1)]=analyse_points["info"+str(count+1)]+points_info
+            else:
+                analyse_points["info"+str(count+1)]=points_info
+
             if(str(count+1) in analyse_points):
                 analyse_points[str(count+1)]=analyse_points[str(count+1)]+points
             else:
@@ -114,20 +119,7 @@ while True:
             #print(cluster_result)
             for out in range(len(cluster_result)):
                 if cluster_result[out]==-1:
-                    get_number=0
-                    total=0
-                    if(analyse_number+1==1):
-                        total=out
-                        possible_outliers.append(dict({"part":analyse_number+1,"point":analyse_points["info"][total]}))
-                    else:
-                        while True:
-                            get_number=get_number+1
-                            #print(len(analyse_points[str(get_number)]))
-                            total=total+len(analyse_points[str(get_number)])
-                            if(analyse_number==get_number):
-                                break
-                        total=total+out
-                        possible_outliers.append(dict({"part":analyse_number+1,"point":analyse_points["info"][total]}))
+                    possible_outliers.append(dict({"part":analyse_number+1,"point":analyse_points["info"+str(analyse_number+1)][out]}))
             analyse_number=analyse_number+1
     else:
         break
