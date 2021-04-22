@@ -115,7 +115,7 @@ possible_outliers=[]
 while True:
     if(str(analyse_number+1) in analyse_points):
         # cluster
-            cluster_result=p.clusterPoints(analyse_points[str(analyse_number+1)],0.5,50)
+            cluster_result=p.clusterPoints(analyse_points[str(analyse_number+1)],0.5,100)
             #print(cluster_result)
             for out in range(len(cluster_result)):
                 if cluster_result[out]==-1:
@@ -128,11 +128,11 @@ while True:
 print(possible_outliers)
 print(len(possible_outliers))
 with open('possible_outliers.csv', mode='w') as csv_file:
-    possible_outlers_fieldnames = ['time', 'lat', 'lon']
+    possible_outlers_fieldnames = ['part','time', 'lat', 'lon']
     writer = csv.DictWriter(csv_file, fieldnames=possible_outlers_fieldnames)
     writer.writeheader()
     for poss_outlier in possible_outliers:
-        writer.writerow({'time': poss_outlier["point"][2],'lat':poss_outlier["point"][1],'lon':poss_outlier["point"][0] })
+        writer.writerow({'part':poss_outlier["part"],'time': poss_outlier["point"][2],'lat':poss_outlier["point"][1],'lon':poss_outlier["point"][0] })
 
 '''
 all_date1=start_datee.strftime('%Y-%m-%d %H:%M:%S')
