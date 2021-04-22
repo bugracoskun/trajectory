@@ -115,7 +115,7 @@ possible_outliers=[]
 while True:
     if(str(analyse_number+1) in analyse_points):
         # cluster
-            cluster_result=p.clusterPoints(analyse_points[str(analyse_number+1)],0.4,20)
+            cluster_result=p.clusterPoints(analyse_points[str(analyse_number+1)],0.3,40)
             #print(cluster_result)
             for out in range(len(cluster_result)):
                 if cluster_result[out]==-1:
