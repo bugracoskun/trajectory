@@ -122,7 +122,7 @@ while True:
                     else:
                         while analyse_number+1<get_number:
                             get_number=get_number+1
-                            total=total+len(analyse_points[get_number])-1
+                            total=total+len(analyse_points[get_number])
                         total=total+out
                         possible_outliers.append(dict({"part":analyse_number+1,"point":analyse_points["info"][total]}))
             analyse_number=analyse_number+1
