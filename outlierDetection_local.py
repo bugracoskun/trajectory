@@ -19,16 +19,17 @@ port=f.readline().rstrip("\n")
 p = postgres(database, user,password,host,port)
 
 
-table_name="ships_1012_geom"
-space_time_cube_t="space_time_cube_10_12_2020_219005068"
+table_name="ships"
+space_time_cube_t="space_time_cube_219005068"
 default_mmsi=219005068
-start_datee=datetime(2020,12,10, 00, 00, 00, 00)
-start_epoch=math.ceil(datetime(2020,12,10, 00, 00, 00, 00).timestamp())
+start_datee=datetime(2020,12,1, 00, 00, 00, 00)
+start_epoch=math.ceil(datetime(2020,12,1, 00, 00, 00, 00).timestamp())
 add_time = timedelta(minutes=15)
 border=5
 time_range=timedelta(minutes=10)
 
 # ------ Analyse -------------------
+analyse_points={} # points will be saved
 
 f2 = open("trajectory_ships_20min_219005068_local.txt", "r")
 data=[]
@@ -47,22 +48,29 @@ for x in f2:
         finish_epoch=datetime(int(datee[0]),int(datee[1]),int(datee[2]),int(finish_time[0]),int(finish_time[1]),int(finish_time[2]))
         epoch1=datetime(int(datee[0]),int(datee[1]),int(datee[2]),int(start_time[0]),int(start_time[1]),int(start_time[2]))
         epoch2=epoch1+time_range
+
+        count=0
         while True:
             print("--------------------")
             print(epoch1)
             print(epoch2)
             # get points 
             points=p.getVesselSpecificTime(table_name,mmsi,epoch1,epoch2)
-            
+            if(str(count+1) in analyse_points):
+                analyse_points[str(count+1)].append(points[0])
+            else:
+                analyse_points[str(count+1)]=points
             #center
             center_point=center(points)
             
+            '''
             # transform (if is needed)
             ##transform_coords=p.transformCoords('epsg:4326','epsg:2163',points)
 
             # cluster
             cluster_result=p.clusterPoints(points,0.5,8)
             print(cluster_result)
+            '''
 
             epoch_start=datetime(int(datee[0]),int(datee[1]),int(datee[2]),int(start_time[0]),int(start_time[1]),int(start_time[2])).timestamp()
             epoch_finish=datetime(int(datee[0]),int(datee[1]),int(datee[2]),int(finish_time[0]),int(finish_time[1]),int(finish_time[2])).timestamp()
@@ -87,9 +95,24 @@ for x in f2:
             epoch2=epoch1+time_range
             if(epoch1>finish_epoch):
                 break
+            else:
+                count=count+1
+        #break
+
+#print(data)
+#print(analyse_points)
+
+analyse_number=0
+
+while True:
+    if(str(analyse_number+1) in analyse_points):
+        # cluster
+            cluster_result=p.clusterPoints(analyse_points[str(analyse_number+1)],0.001,8)
+            print(cluster_result)
+            analyse_number=analyse_number+1
+    else:
         break
 
-print(data)
 
 all_date1=start_datee.strftime('%Y-%m-%d %H:%M:%S')
 

@@ -80,7 +80,6 @@ for newday in range(31):
             # add to geojson
             center_feat["properties"]["count"]=len(trips)
             features.append(center_feat)
-            print(center_feat)
             # add to database
             if i%data["i"]==0 and i!=0:
                 x=x+1
