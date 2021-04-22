@@ -29,7 +29,7 @@ border=5
 time_range=timedelta(minutes=10)
 
 # ------ Analyse -------------------
-analyse_points={} # points will be saved
+analyse_points={"info":[]} # points will be saved
 
 f2 = open("trajectory_ships_20min_219005068_local.txt", "r")
 data=[]
@@ -56,8 +56,10 @@ for x in f2:
             print(epoch2)
             # get points 
             points=p.getVesselSpecificTime(table_name,mmsi,epoch1,epoch2)
+            points_info=p.getVesselSpecificTimewithTimeInfo(table_name,mmsi,epoch1,epoch2)
+            analyse_points["info"]=analyse_points["info"]+points_info
             if(str(count+1) in analyse_points):
-                analyse_points[str(count+1)].append(points[0])
+                analyse_points[str(count+1)]=analyse_points[str(count+1)]+points
             else:
                 analyse_points[str(count+1)]=points
             #center
@@ -103,17 +105,41 @@ for x in f2:
 #print(analyse_points)
 
 analyse_number=0
+possible_outliers=[]
 
 while True:
     if(str(analyse_number+1) in analyse_points):
         # cluster
-            cluster_result=p.clusterPoints(analyse_points[str(analyse_number+1)],0.001,8)
-            print(cluster_result)
+            cluster_result=p.clusterPoints(analyse_points[str(analyse_number+1)],0.5,50)
+            #print(cluster_result)
+            for out in range(len(cluster_result)):
+                if cluster_result[out]==-1:
+                    get_number=0
+                    total=0
+                    if(analyse_number+1==1):
+                        total=out
+                        possible_outliers.append(dict({"part":analyse_number+1,"point":analyse_points["info"][total]}))
+                    else:
+                        while analyse_number+1<get_number:
+                            get_number=get_number+1
+                            total=total+len(analyse_points[get_number])-1
+                        total=total+out
+                        possible_outliers.append(dict({"part":analyse_number+1,"point":analyse_points["info"][total]}))
             analyse_number=analyse_number+1
     else:
         break
 
 
+print(possible_outliers)
+print(len(possible_outliers))
+with open('possible_outliers.csv', mode='w') as csv_file:
+    possible_outlers_fieldnames = ['time', 'lat', 'lon']
+    writer = csv.DictWriter(csv_file, fieldnames=possible_outlers_fieldnames)
+    writer.writeheader()
+    for poss_outlier in possible_outliers:
+        writer.writerow({'time': poss_outlier["point"][2],'lat':poss_outlier["point"][1],'lon':poss_outlier["point"][0] })
+
+'''
 all_date1=start_datee.strftime('%Y-%m-%d %H:%M:%S')
 
 #allPoints=p.getVesselAllLoc(table_name,default_mmsi)
@@ -124,7 +150,7 @@ polygons=[]
 for k in space_time_cube:
     add_object = json.loads(k[6])
     polygons.append(add_object)
-
+'''
 '''
 with open('my_file.csv', mode='w') as csv_file:
     fieldnames = ['tempature', 'pressure', 'humidity','cloud','wind_spped','traffic','trip_time']

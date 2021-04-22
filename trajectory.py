@@ -17,6 +17,7 @@ from turf.square_grid import square_grid
 from turf.boolean_point_in_polygon import boolean_point_in_polygon
 from turf.bbox import bbox
 from sklearn.cluster import DBSCAN
+from sklearn.preprocessing import StandardScaler
 from pyproj import Proj, transform
 #import os
 
@@ -246,6 +247,17 @@ class postgres():
         result=cur.fetchall()
         return result
 
+# get vessel on mmsi with specific time with INFO
+    def getVesselSpecificTimewithTimeInfo(self,table_name,mmsi,start_time,finish_time):
+        query =  "SELECT lon,lat,time_info "\
+        "from {} "\
+        "where mmsi='{}' and time_info>= '{}' and time_info<='{}' ".format(table_name,mmsi,start_time,finish_time)
+
+        cur = self.conn.cursor()
+        cur.execute(query)
+        result=cur.fetchall()
+        return result
+
     def getVesselAllLoc(self,table_name,mmsi):
         query =  "SELECT lon,lat "\
         "from {} "\
@@ -300,7 +312,8 @@ class postgres():
 
 # cluster Points with dbscan
     def clusterPoints(self,points,epsilon,min_samples):
-        clustering = DBSCAN(eps=epsilon, min_samples=min_samples).fit(points)
+        X = StandardScaler().fit_transform(points)
+        clustering = DBSCAN(eps=epsilon, min_samples=min_samples).fit(X)
         return clustering.labels_
 
 # transform Coordinates
