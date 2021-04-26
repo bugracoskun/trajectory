@@ -16,7 +16,7 @@ port=f.readline().rstrip("\n")
 p = postgres(database, user,password,host,port)
 
 #INPUTS
-stage=6 # yolculuğun kaçancı parçası alınacak
+stage=4 # yolculuğun kaçancı parçası alınacak
 default_mmsi=219005068
 table_name="ships"
 time_range=timedelta(minutes=10)
