@@ -44,12 +44,12 @@ with open('219005068_10min_'+str(stage)+'.csv', mode='w') as csv_file:
             finish_epoch=datetime(int(datee[0]),int(datee[1]),int(datee[2]),int(finish_time[0]),int(finish_time[1]),int(finish_time[2]))
             epoch1=datetime(int(datee[0]),int(datee[1]),int(datee[2]),int(start_time[0]),int(start_time[1]),int(start_time[2]))+(time_range*(stage-1))
             epoch2=epoch1+time_range
-
-            print(epoch1)
-            print(epoch2)
-            # get points 
-            points_info=p.getVesselSpecificTimewithTimeInfo(table_name,mmsi,epoch1,epoch2)
-            for poi in points_info:
-                    writer.writerow({'time': poi[2],'lat':poi[1],'lon':poi[0] })
+            if(epoch1<finish_epoch):
+                print(epoch1)
+                print(epoch2)
+                # get points 
+                points_info=p.getVesselSpecificTimewithTimeInfo(table_name,mmsi,epoch1,epoch2)
+                for poi in points_info:
+                        writer.writerow({'time': poi[2],'lat':poi[1],'lon':poi[0] })
 
 
