@@ -30,7 +30,7 @@ start_epoch=math.ceil(datetime(2020,12,1, 00, 00, 00, 00).timestamp())
 add_time = timedelta(minutes=15)
 border=5
 time_range=timedelta(minutes=10)
-eps=1
+eps=0.12
 
 # ------ Analyse -------------------
 analyse_points={} # points will be saved
@@ -110,7 +110,7 @@ while True:
     while True:
         if(str(analyse_number+1) in analyse_points):
             # cluster
-                cluster_result=p.clusterPoints(analyse_points[str(analyse_number+1)],eps,429)
+                cluster_result=p.clusterPoints(analyse_points[str(analyse_number+1)],eps,215)
                 for out in range(len(cluster_result)):
                     if cluster_result[out]==-1:
                         possible_outliers=possible_outliers+1
