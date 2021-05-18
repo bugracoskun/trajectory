@@ -27,11 +27,12 @@ start_epoch=math.ceil(datetime(2020,12,1, 00, 00, 00, 00).timestamp())
 add_time = timedelta(minutes=15)
 border=5
 time_range=timedelta(minutes=10)
+input_txt_file="trajectory_ships_20min_219005068_local.txt"
 
 # ------ Analyse -------------------
 analyse_points={} # points will be saved
 
-f2 = open("trajectory_ships_20min_219005068_local.txt", "r")
+f2 = open(input_txt_file, "r")
 data=[]
 for x in f2:
     line=x.split()
@@ -109,6 +110,7 @@ for x in f2:
 #print(data)
 #print(analyse_points)
 
+
 analyse_number=0
 possible_outliers=[]
 
@@ -119,82 +121,21 @@ while True:
             #print(cluster_result)
             for out in range(len(cluster_result)):
                 if cluster_result[out]==-1:
-                    possible_outliers.append(dict({"part":analyse_number+1,"point":analyse_points["info"+str(analyse_number+1)][out]}))
+                    #print(analyse_points["info"+str(analyse_number+1)][out][2])
+                    tripId=p.findinterval(analyse_points["info"+str(analyse_number+1)][out][2],input_txt_file)
+                    if(tripId!=False):
+                        possible_outliers.append(dict({"part":analyse_number+1,"point":analyse_points["info"+str(analyse_number+1)][out],"tripId":str(tripId)}))
             analyse_number=analyse_number+1
     else:
         break
 
 
+
 print(possible_outliers)
 print(len(possible_outliers))
 with open('possible_outliers.csv', mode='w') as csv_file:
-    possible_outlers_fieldnames = ['part','time', 'lat', 'lon']
+    possible_outlers_fieldnames = ['part','tripId','time', 'lat', 'lon']
     writer = csv.DictWriter(csv_file, fieldnames=possible_outlers_fieldnames)
     writer.writeheader()
     for poss_outlier in possible_outliers:
-        writer.writerow({'part':poss_outlier["part"],'time': poss_outlier["point"][2],'lat':poss_outlier["point"][1],'lon':poss_outlier["point"][0] })
-
-'''
-all_date1=start_datee.strftime('%Y-%m-%d %H:%M:%S')
-
-#allPoints=p.getVesselAllLoc(table_name,default_mmsi)
-
-# get space time cube data
-space_time_cube=p.gettable(space_time_cube_t)
-polygons=[]
-for k in space_time_cube:
-    add_object = json.loads(k[6])
-    polygons.append(add_object)
-'''
-'''
-with open('my_file.csv', mode='w') as csv_file:
-    fieldnames = ['tempature', 'pressure', 'humidity','cloud','wind_spped','traffic','trip_time']
-    writer = csv.DictWriter(csv_file, fieldnames=fieldnames)
-    writer.writeheader()
-    for d in range(len(data)):
-        start_datee=datetime(2020,12,10, 00, 00, 00, 00)
-        for i in range(96):
-            total_traffic=0
-            if (data[d]["start_time_obj"]>=start_datee and data[d]["start_time_obj"]<=start_datee+add_time):
-                while True:
-                    send_date1=start_datee.strftime('%Y-%m-%d %H:%M:%S')
-                    send_date2=(start_datee+add_time).strftime('%Y-%m-%d %H:%M:%S')
-                    points=p.getVesselSpecificTime(table_name,default_mmsi,send_date1,send_date2)
-                    if(len(points)>0):
-                        #print(center(points))
-                        lon=points[0][0]
-                        lat=points[0][1]
-                        point1 = point([float(lon), float(lat)])
-                        for t in range(len(polygons)):
-                            inPolygon=p.pointinpolygon(point1,polygons[t])
-                            if inPolygon:
-                                own_x=math.ceil((t+1)/border)
-                                own_y=(t+1)%border
-                                traffic=p.findTraffic(space_time_cube_t,send_date1,send_date2,own_x,own_y,border)
-                                total_traffic=total_traffic+traffic
-                                break
-                    start_datee = start_datee+add_time
-                    if data[d]["finish_time_obj"]<=start_datee:
-                        break
-                break
-            else:
-                start_datee = start_datee+add_time
-
-        # get Weather 
-        url="http://history.openweathermap.org/data/2.5/history/city?lat="+str(round(center_point['geometry']['coordinates'][1],4))+"&lon="+str(round(center_point['geometry']['coordinates'][0],4))+"&start="+str(start_epoch)+"&end="+str(data[d]["epoch"])+"&appid="+appid
-        
-        response = requests.get(url)
-        if(response.status_code==200):
-            weather_data=json.loads(response.text)
-            if(weather_data):
-                weather_data=weather_data['list'][-1]
-                writer.writerow({'tempature': weather_data["main"]["temp"], 'pressure': weather_data["main"]["pressure"], 'humidity': weather_data["main"]["humidity"],'cloud': weather_data["clouds"]["all"],'wind_spped': weather_data["wind"]["speed"],'traffic': total_traffic,'trip_time':data[d]["trip_time"]})
-            else:
-                #write CSV
-                writer.writerow({'tempature': -1, 'pressure': -1, 'humidity': -1,'cloud': -1,'wind_spped': -1,'traffic': -1,'trip_time':data[d]["trip_time"]})
-        else:
-            print(response.status_code, response.reason)
-            writer.writerow({'tempature': -1, 'pressure': -1, 'humidity': -1,'cloud': -1,'wind_spped': -1,'traffic': -1,'trip_time':data[d]["trip_time"]})
-        
-    
-'''
+        writer.writerow({'part':poss_outlier["part"],'tripId':poss_outlier["tripId"],'time': poss_outlier["point"][2],'lat':poss_outlier["point"][1],'lon':poss_outlier["point"][0] })

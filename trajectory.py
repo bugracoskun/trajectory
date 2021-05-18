@@ -12,7 +12,8 @@ Kütüphane ve fonksiyonlar burada yazılıyor.
 """
 
 import psycopg2
-import datetime
+from datetime import datetime
+from datetime import timedelta
 from turf.square_grid import square_grid
 from turf.boolean_point_in_polygon import boolean_point_in_polygon
 from turf.bbox import bbox
@@ -347,3 +348,25 @@ class postgres():
         cur.execute(query)
         self.conn.commit()
         return True
+
+# find time interval
+    def findinterval(self,time,file):
+        f2 = open(file, "r")
+        for x in f2:
+            line=x.split()
+            mmsi=line[0]
+            tripId=line[1]
+
+            datee=line[2]
+            datee=datee.split("-")
+            start_time=line[3].split(":")
+            start_time2=line[2]+" "+line[3]
+            general_start_time_obj=datetime(int(datee[0]),int(datee[1]),int(datee[2]),int(start_time[0]),int(start_time[1]),int(start_time[2]))
+
+            finish_time=line[5].split(":")
+            finish_time2=line[4]+" "+line[5]
+            finish_epoch=datetime(int(datee[0]),int(datee[1]),int(datee[2]),int(finish_time[0]),int(finish_time[1]),int(finish_time[2]))
+
+            if(time>=general_start_time_obj and time<=finish_epoch):
+                return tripId
+        return False
