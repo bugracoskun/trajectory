@@ -28,9 +28,10 @@ for x in f2:
     start_time=line[2]+" "+line[3]
 
     finish_time2=line[4]+" "+line[5]
-
+    print(start_time)
     points=p.getVesselSpecificTime(table_name,mmsi,start_time,finish_time2)
-    data=data+points
+    transform_coords=p.transformCoords('epsg:4326','epsg:2163',points)
+    data=data+transform_coords
 
 print(len(data))
 print(data[0])
