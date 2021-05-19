@@ -37,9 +37,20 @@ for x in f2:
 print(len(data))
 print(data[0])
 
+outliers=[]
+
+with open('possible_outliers.csv',mode='r') as csv_file2:
+    csv_reader = csv.reader(csv_file2, delimiter=',')
+    for row in csv_reader:
+        if(len(row)!=0 and row[0]!="part"):
+            outliers.append([float(row[3]),float(row[4])])
+
+
 with open('allPoints.csv', mode='w') as csv_file:
-    possible_outlers_fieldnames = ['lat','lon']
-    writer = csv.DictWriter(csv_file, fieldnames=possible_outlers_fieldnames)
-    writer.writeheader()
-    for poi in data:
-        writer.writerow({'lat':poi[1],'lon':poi[0] })
+        possible_outlers_fieldnames = ['lat','lon']
+        writer = csv.DictWriter(csv_file, fieldnames=possible_outlers_fieldnames)
+        writer.writeheader()
+        
+        for poi in data:
+            if([poi[1],poi[0]] not in outliers):
+                writer.writerow({'lat':poi[1],'lon':poi[0] })
