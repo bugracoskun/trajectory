@@ -15,16 +15,29 @@ table_name="ships"
 epoch1="2020-12-01 00:00:00"
 epoch2="2020-12-31 24:00:00"
 mmsi="219005068"
+input_txt_file="trajectory_ships_20min_219005068_local.txt"
 
 # ANALYSE
 
-points=p.getVesselSpecificTime(table_name,mmsi,epoch1,epoch2)
-print(len(points))
-print(points[0])
+f2 = open(input_txt_file, "r")
+data=[]
+for x in f2:
+    line=x.split()
+    mmsi=line[0]
+
+    start_time=line[2]+" "+line[3]
+
+    finish_time2=line[4]+" "+line[5]
+
+    points=p.getVesselSpecificTime(table_name,mmsi,start_time,finish_time2)
+    data=data+points
+
+print(len(data))
+print(data[0])
 
 with open('allPoints.csv', mode='w') as csv_file:
     possible_outlers_fieldnames = ['lat','lon']
     writer = csv.DictWriter(csv_file, fieldnames=possible_outlers_fieldnames)
     writer.writeheader()
-    for poi in points:
+    for poi in data:
         writer.writerow({'lat':poi[1],'lon':poi[0] })
