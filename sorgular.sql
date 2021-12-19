@@ -31,14 +31,14 @@ CREATE TABLE ships (
   PRIMARY KEY ("id")
 )
 -- optimal table
-CREATE TABLE ships_opt (
+CREATE TABLE ships_opt_0910 (
   "id" SERIAL,
   time_info timestamp,
   Type_of_mobile character varying(50),
   MMSI BIGINT,
   lat double precision,
   lon double precision,
-  nav_status character varying(50),
+  nav_status character varying(150),
   ROT double precision,
   SOG double precision,
   COG double precision,
@@ -62,14 +62,14 @@ CREATE TABLE ships_opt (
   PRIMARY KEY ("id")
 )
 -- geom table
-CREATE TABLE ships (
+CREATE TABLE ships_0910_geom (
   "id" SERIAL,
   time_info timestamp,
   Type_of_mobile character varying(50),
   MMSI BIGINT,
   lat double precision,
   lon double precision,
-  nav_status character varying(50),
+  nav_status character varying(150),
   ROT double precision,
   SOG double precision,
   COG double precision,
@@ -110,7 +110,7 @@ where d.id=b.id
 INSERT INTO ships_opt(geom)
 VALUES (select ST_SetSRID(ST_Point(lon,lat),4326) from ships_opt);
 
-insert into ships(id, time_info, Type_of_mobile, MMSI, lat, 
+insert into ships_0910_geom(id, time_info, Type_of_mobile, MMSI, lat, 
 		        lon, nav_status, ROT, SOG, COG, 
 		        heading, IMO, callsign, name_vessel, ship_type, cargo_type, 
 		        width, len, position_fixed_device, draught, 
@@ -121,11 +121,10 @@ insert into ships(id, time_info, Type_of_mobile, MMSI, lat,
 		        width, len, position_fixed_device, draught, 
 		        destination, eta, data_source_type, size_a, size_b, size_c, size_d,
 				ST_SetSRID(ST_Point(lon,lat),4326)
-	from ships_opt
-	where mmsi=219005068
+	from ships_opt_0910
 
 select *
-from ships_1712_geom
+from ships_0910_geom
 limit 10
 
 select *

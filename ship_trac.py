@@ -33,7 +33,7 @@ except:
 cur = conn.cursor()
 
 query2 =  """select DISTINCT mmsi,lat,lon,time_info
-from ships_opt_10_12
+from ships_opt_0910
 where ship_type='Passenger'
 order by mmsi,time_info
 """
@@ -114,11 +114,11 @@ for passanger in passengers:
 
 # Simple solution - Loop------------
 
-file = open("trajectory_ships_20min_v2.txt", "w")
+file = open("trajectory_ships_20min.txt", "w")
 for ship in passenger_list:
     sog_value=0.5
     query = " select mmsi,time_info,sog " \
-            " from ships_1012_geom s"\
+            " from ships_0910_geom s"\
             " FULL JOIN zones z1 ON ST_Dwithin(z1.geom, s.geom,0.003) "\
             " where mmsi={} and sog<{} "\
             " order by time_info desc ".format(ship,sog_value)

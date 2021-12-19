@@ -15,7 +15,7 @@ port=f.readline().rstrip("\n")
 p = postgres(database, user,password,host,port)
 
 def copyfiles(i):
-  file_name=20201201
+  file_name=20210901
   file_name=file_name+i
   print(file_name)
   res=p.copy_files(str(file_name))
