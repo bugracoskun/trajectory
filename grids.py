@@ -29,8 +29,8 @@ data='{\
        "unit":"kilometers",\
        "table":"ships_opt",\
        "table_spaceTimeCube":"space_time_cube_219005068",\
-       "year":2020,\
-       "month":12,\
+       "year":2021,\
+       "month":9,\
        "day":1,\
        "time":15,\
        "i":5\

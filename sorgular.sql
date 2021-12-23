@@ -106,6 +106,13 @@ SET geom = ST_SetSRID(ST_Point(d.lon,d.lat),4326)
 from ships_opt d
 where d.id=b.id
 
+UPDATE ships_opt d
+SET geom = ST_SetSRID(ST_Point(d.lon,d.lat),4326)
+
+select *
+from ships_opt
+limit 10
+
    
 INSERT INTO ships_opt(geom)
 VALUES (select ST_SetSRID(ST_Point(lon,lat),4326) from ships_opt);
