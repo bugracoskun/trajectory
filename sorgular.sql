@@ -62,7 +62,7 @@ CREATE TABLE ships_opt_0910 (
   PRIMARY KEY ("id")
 )
 -- geom table
-CREATE TABLE ships_0910_geom (
+CREATE TABLE ships_weekly_geom (
   "id" SERIAL,
   time_info timestamp,
   Type_of_mobile character varying(50),
@@ -117,7 +117,7 @@ limit 10
 INSERT INTO ships_opt(geom)
 VALUES (select ST_SetSRID(ST_Point(lon,lat),4326) from ships_opt);
 
-insert into ships_0910_geom(id, time_info, Type_of_mobile, MMSI, lat, 
+insert into ships_weekly_geom(id, time_info, Type_of_mobile, MMSI, lat, 
 		        lon, nav_status, ROT, SOG, COG, 
 		        heading, IMO, callsign, name_vessel, ship_type, cargo_type, 
 		        width, len, position_fixed_device, draught, 
@@ -128,7 +128,7 @@ insert into ships_0910_geom(id, time_info, Type_of_mobile, MMSI, lat,
 		        width, len, position_fixed_device, draught, 
 		        destination, eta, data_source_type, size_a, size_b, size_c, size_d,
 				ST_SetSRID(ST_Point(lon,lat),4326)
-	from ships_opt_0910
+	from ships_opt_weekly
 
 select *
 from ships_0910_geom
