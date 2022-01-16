@@ -98,7 +98,7 @@ select *
 from ships_opt
 limit 10
 
-ALTER TABLE ships_opt
+ALTER TABLE ships_opt_weekly
 ADD COLUMN geom geometry(Geometry,4326);
 
 UPDATE ships_opt b
@@ -106,7 +106,7 @@ SET geom = ST_SetSRID(ST_Point(d.lon,d.lat),4326)
 from ships_opt d
 where d.id=b.id
 
-UPDATE ships_opt d
+UPDATE ships_opt_weekly d
 SET geom = ST_SetSRID(ST_Point(d.lon,d.lat),4326)
 
 select *
