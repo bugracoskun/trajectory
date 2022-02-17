@@ -16,15 +16,15 @@ port=f.readline().rstrip("\n")
 p = postgres(database, user,password,host,port)
 
 #INPUTS
-stage=4 # yolculuğun kaçancı parçası alınacak
+stage=7 # yolculuğun kaçancı parçası alınacak
 default_mmsi=219005068
-table_name="ships"
+table_name="ships3"
 time_range=timedelta(minutes=10)
 
 # ANALYSE
-f2 = open("trajectory_ships_20min_219005068_local.txt", "r")
+f2 = open("./weather/real_result1.txt", "r")
 
-with open('219005068_10min_'+str(stage)+'.csv', mode='w') as csv_file:
+with open('_219005068_10min_'+str(stage)+'.csv', mode='w') as csv_file:
     points_fieldnames = ['time', 'lat', 'lon']
     writer = csv.DictWriter(csv_file, fieldnames=points_fieldnames)
     writer.writeheader()
